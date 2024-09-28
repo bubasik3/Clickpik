@@ -97,8 +97,14 @@
 
         // Функция для изменения цвета кнопки
         function changeButtonColor() {
-            const brightGreen = '#4CAF50'; // Яркий зеленый цвет
-            document.getElementById("click-btn").style.backgroundColor = brightGreen;
+            const brightGreen = '#66BB6A'; // Более яркий зеленый цвет
+            const button = document.getElementById("click-btn");
+            button.style.backgroundColor = brightGreen; // Меняем на яркий зеленый
+
+            // Возвращаем исходный цвет через 300 мс
+            setTimeout(() => {
+                button.style.backgroundColor = '#4CAF50'; // Возвращаем исходный цвет
+            }, 300);
         }
 
         // Добавляем обработчики событий touchstart и touchend
@@ -119,3 +125,4 @@
 
 </body>
 </html>
+
