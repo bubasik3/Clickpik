@@ -10,8 +10,10 @@
             margin: 0;
             height: 100vh; /* Высота окна браузера */
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            background-color: #f0f0f0; /* Цвет фона для контраста */
         }
         .score {
             font-size: 2em;
@@ -20,7 +22,7 @@
         .click-btn {
             width: 250px; /* Увеличиваем ширину */
             height: 250px; /* Увеличиваем высоту */
-            font-size: 1.5em;
+            font-size: 2em; /* Увеличиваем размер шрифта */
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -30,6 +32,8 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Добавляем тень */
+            text-align: center; /* Центрируем текст */
+            transition: background-color 0.3s; /* Плавный переход цвета */
         }
         .click-btn:hover {
             background-color: #45a049;
@@ -38,17 +42,23 @@
 </head>
 <body>
 
+    <div class="score" id="score">Счёт: 0</div>
     <div class="click-btn" id="click-btn">Кликни</div>
 
     <script>
         // Инициализируем счет из LocalStorage
         let score = localStorage.getItem('clickScore');
-        
+
         // Проверяем, есть ли сохранённое значение
         if (score !== null) {
             score = parseInt(score);
         } else {
             score = 0; // Если значения нет, устанавливаем 0
+        }
+
+        // Обновляем текст счётчика
+        function updateScoreDisplay() {
+            document.getElementById("score").innerText = "Счёт: " + score;
         }
 
         // Храним активные идентификаторы касаний
@@ -66,11 +76,13 @@
                 if (!activeTouches.has(touch.identifier)) {
                     activeTouches.add(touch.identifier); // Добавляем в активные касания
                     score++; // Увеличиваем счет на 1
+                    changeButtonColor(); // Меняем цвет кнопки
                 }
             }
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
+            updateScoreDisplay(); // Обновляем текст счётчика
         }
 
         // Функция для обработки завершения касания (удаление из активных)
@@ -83,6 +95,13 @@
             }
         }
 
+        // Функция для изменения цвета кнопки
+        function changeButtonColor() {
+            const colors = ['#4CAF50', '#FF5733', '#FFC300', '#C70039', '#900C3F', '#581845'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.getElementById("click-btn").style.backgroundColor = randomColor;
+        }
+
         // Добавляем обработчики событий touchstart и touchend
         document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
         document.getElementById("click-btn").addEventListener("touchend", handleTouchEnd);
@@ -90,10 +109,13 @@
         // Обработчик события click для настольных устройств
         document.getElementById("click-btn").addEventListener("click", function(event) {
             score++; // Увеличиваем счет на 1 при клике
-
-            // Сохраняем значение в LocalStorage
-            localStorage.setItem('clickScore', score);
+            changeButtonColor(); // Меняем цвет кнопки
+            localStorage.setItem('clickScore', score); // Сохраняем значение в LocalStorage
+            updateScoreDisplay(); // Обновляем текст счётчика
         });
+
+        // Изначальное обновление текста счётчика
+        updateScoreDisplay();
     </script>
 
 </body>
