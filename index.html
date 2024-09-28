@@ -34,16 +34,29 @@
     <button class="click-btn" id="click-btn">Кликни меня!</button>
 
     <script>
-        let score = 0;
+        // Инициализируем счет из LocalStorage
+        let score = localStorage.getItem('clickScore');
+        
+        // Проверяем, есть ли сохранённое значение
+        if (score !== null) {
+            score = parseInt(score);
+        } else {
+            score = 0; // Если значения нет, устанавливаем 0
+        }
+
+        // Обновляем отображение счета
+        document.getElementById('score').textContent = score;
 
         // Добавляем обработчик события к кнопке
         document.getElementById("click-btn").addEventListener("click", function() {
-            score++;
-            document.getElementById('score').textContent = score;
+            score++; // Увеличиваем счёт
+            document.getElementById('score').textContent = score; // Обновляем отображение
+
+            // Сохраняем значение в LocalStorage
+            localStorage.setItem('clickScore', score);
         });
     </script>
 
 </body>
 </html>
-
    
