@@ -49,8 +49,8 @@
 
         // Функция для обработки касаний (multi-touch)
         function handleTouch(event) {
-            // Получаем количество пальцев, коснувшихся экрана
-            let touches = event.touches.length;
+            event.preventDefault(); // Предотвращаем срабатывание события click
+            let touches = event.touches.length; // Получаем количество касаний
 
             // Увеличиваем счет на количество касаний
             score += touches;
@@ -63,9 +63,10 @@
         // Добавляем обработчик события "touchstart" для мобильных устройств
         document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
 
-        // Также оставляем событие "click" для настольных браузеров
-        document.getElementById("click-btn").addEventListener("click", function() {
-            score++;
+        // Обработчик события click для настольных браузеров
+        document.getElementById("click-btn").addEventListener("click", function(event) {
+            event.preventDefault(); // Предотвращаем двойное срабатывание при touch
+            score++; // Увеличиваем счет на 1 при клике
             document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
