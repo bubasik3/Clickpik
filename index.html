@@ -33,7 +33,7 @@
             align-items: center;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Добавляем тень */
             text-align: center; /* Центрируем текст */
-            transition: background-color 0.3s; /* Плавный переход цвета */
+            transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета и уменьшения */
         }
         .click-btn:hover {
             background-color: #45a049;
@@ -101,9 +101,13 @@
             const button = document.getElementById("click-btn");
             button.style.backgroundColor = brightGreen; // Меняем на яркий зеленый
 
-            // Возвращаем исходный цвет через 300 мс
+            // Уменьшаем кнопку
+            button.style.transform = 'scale(0.9)'; // Уменьшаем до 90%
+
+            // Возвращаем исходные значения через 300 мс
             setTimeout(() => {
                 button.style.backgroundColor = '#4CAF50'; // Возвращаем исходный цвет
+                button.style.transform = 'scale(1)'; // Возвращаем размер
             }, 300);
         }
 
@@ -125,4 +129,3 @@
 
 </body>
 </html>
-
