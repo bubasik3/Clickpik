@@ -20,10 +20,10 @@
             margin-bottom: 20px;
         }
         .click-btn {
-            width: 250px; /* Увеличиваем ширину */
-            height: 250px; /* Увеличиваем высоту */
+            width: 312.5px; /* Увеличиваем ширину на 25% (250px * 1.25) */
+            height: 312.5px; /* Увеличиваем высоту на 25% (250px * 1.25) */
             font-size: 2em; /* Увеличиваем размер шрифта */
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Начальный цвет кнопки */
             color: white;
             border: none;
             cursor: pointer;
@@ -97,9 +97,8 @@
 
         // Функция для изменения цвета кнопки
         function changeButtonColor() {
-            const colors = ['#4CAF50', '#FF5733', '#FFC300', '#C70039', '#900C3F', '#581845'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            document.getElementById("click-btn").style.backgroundColor = randomColor;
+            const brightGreen = '#4CAF50'; // Яркий зеленый цвет
+            document.getElementById("click-btn").style.backgroundColor = brightGreen;
         }
 
         // Добавляем обработчики событий touchstart и touchend
