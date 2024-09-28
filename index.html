@@ -47,10 +47,26 @@
         // Обновляем отображение счета
         document.getElementById('score').textContent = score;
 
-        // Добавляем обработчик события к кнопке
+        // Функция для обработки касаний (multi-touch)
+        function handleTouch(event) {
+            // Получаем количество пальцев, коснувшихся экрана
+            let touches = event.touches.length;
+
+            // Увеличиваем счет на количество касаний
+            score += touches;
+            document.getElementById('score').textContent = score;
+
+            // Сохраняем значение в LocalStorage
+            localStorage.setItem('clickScore', score);
+        }
+
+        // Добавляем обработчик события "touchstart" для мобильных устройств
+        document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
+
+        // Также оставляем событие "click" для настольных браузеров
         document.getElementById("click-btn").addEventListener("click", function() {
-            score++; // Увеличиваем счёт
-            document.getElementById('score').textContent = score; // Обновляем отображение
+            score++;
+            document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
@@ -59,4 +75,3 @@
 
 </body>
 </html>
-   
