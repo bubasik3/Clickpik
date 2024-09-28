@@ -49,29 +49,33 @@
 
         // Функция для обработки касаний (multi-touch)
         function handleTouch(event) {
-            event.preventDefault(); // Предотвращаем срабатывание события click
-            let touches = event.touches.length; // Получаем количество касаний
+            event.preventDefault(); // Предотвращаем срабатывание стандартного события
+            let touches = event.touches.length; // Количество касаний
 
-            // Увеличиваем счет на количество касаний
-            score += touches;
+            score += touches; // Увеличиваем счет на количество касаний
             document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
         }
 
-        // Добавляем обработчик события "touchstart" для мобильных устройств
-        document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
-
-        // Обработчик события click для настольных браузеров
-        document.getElementById("click-btn").addEventListener("click", function(event) {
-            event.preventDefault(); // Предотвращаем двойное срабатывание при touch
+        // Функция для обработки кликов мыши (для настольных устройств)
+        function handleClick(event) {
             score++; // Увеличиваем счет на 1 при клике
             document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
-        });
+        }
+
+        // Проверяем, поддерживает ли устройство "touch"
+        if ('ontouchstart' in window) {
+            // Устройство с сенсорным экраном — используем только touchstart
+            document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
+        } else {
+            // Настольное устройство — используем только click
+            document.getElementById("click-btn").addEventListener("click", handleClick);
+        }
     </script>
 
 </body>
