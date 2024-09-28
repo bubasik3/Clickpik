@@ -15,12 +15,17 @@
             margin-bottom: 20px;
         }
         .click-btn {
-            padding: 20px;
+            width: 150px;
+            height: 150px;
             font-size: 1.5em;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 50%; /* Делаем элемент круглым */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .click-btn:hover {
             background-color: #45a049;
@@ -31,7 +36,7 @@
 
     <h1>Кликер игра</h1>
     <div class="score">Счёт: <span id="score">0</span></div>
-    <button class="click-btn" id="click-btn">Кликни меня!</button>
+    <div class="click-btn" id="click-btn">Кликни</div>
 
     <script>
         // Инициализируем счет из LocalStorage
