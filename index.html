@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -49,33 +49,33 @@
 
         // Функция для обработки касаний (multi-touch)
         function handleTouch(event) {
-            event.preventDefault(); // Предотвращаем срабатывание стандартного события
-            let touches = event.touches.length; // Количество касаний
+            event.preventDefault(); // Предотвращаем стандартное действие
+            let uniqueTouches = new Set(); // Используем Set для уникальных касаний
 
-            score += touches; // Увеличиваем счет на количество касаний
+            // Добавляем все касания в Set, чтобы избежать дублирования
+            for (let i = 0; i < event.touches.length; i++) {
+                uniqueTouches.add(event.touches[i].identifier);
+            }
+
+            // Увеличиваем счет на количество уникальных касаний
+            score += uniqueTouches.size;
             document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
         }
 
-        // Функция для обработки кликов мыши (для настольных устройств)
-        function handleClick(event) {
+        // Добавляем обработчики событий touchstart и touchend
+        document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
+
+        // Обработчик события click для настольных устройств
+        document.getElementById("click-btn").addEventListener("click", function(event) {
             score++; // Увеличиваем счет на 1 при клике
             document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
-        }
-
-        // Проверяем, поддерживает ли устройство "touch"
-        if ('ontouchstart' in window) {
-            // Устройство с сенсорным экраном — используем только touchstart
-            document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
-        } else {
-            // Настольное устройство — используем только click
-            document.getElementById("click-btn").addEventListener("click", handleClick);
-        }
+        });
     </script>
 
 </body>
