@@ -47,26 +47,44 @@
         // Обновляем отображение счета
         document.getElementById('score').textContent = score;
 
+        // Храним активные идентификаторы касаний
+        let activeTouches = new Set();
+
         // Функция для обработки касаний (multi-touch)
         function handleTouch(event) {
             event.preventDefault(); // Предотвращаем стандартное действие
-            let uniqueTouches = new Set(); // Используем Set для уникальных касаний
 
-            // Добавляем все касания в Set, чтобы избежать дублирования
-            for (let i = 0; i < event.touches.length; i++) {
-                uniqueTouches.add(event.touches[i].identifier);
+            // Проходим по новым касаниям
+            for (let i = 0; i < event.changedTouches.length; i++) {
+                let touch = event.changedTouches[i];
+
+                // Проверяем, если это новое касание (его еще нет в активных)
+                if (!activeTouches.has(touch.identifier)) {
+                    activeTouches.add(touch.identifier); // Добавляем в активные касания
+                    score++; // Увеличиваем счет на 1
+                }
             }
 
-            // Увеличиваем счет на количество уникальных касаний
-            score += uniqueTouches.size;
+            // Обновляем отображение счета
             document.getElementById('score').textContent = score;
 
             // Сохраняем значение в LocalStorage
             localStorage.setItem('clickScore', score);
         }
 
+        // Функция для обработки завершения касания (удаление из активных)
+        function handleTouchEnd(event) {
+            for (let i = 0; i < event.changedTouches.length; i++) {
+                let touch = event.changedTouches[i];
+
+                // Удаляем завершённое касание из активных
+                activeTouches.delete(touch.identifier);
+            }
+        }
+
         // Добавляем обработчики событий touchstart и touchend
         document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
+        document.getElementById("click-btn").addEventListener("touchend", handleTouchEnd);
 
         // Обработчик события click для настольных устройств
         document.getElementById("click-btn").addEventListener("click", function(event) {
