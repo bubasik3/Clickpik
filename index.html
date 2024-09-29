@@ -1,130 +1,90 @@
-<!DOCTYPE html>
+ 
+  <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кликер игра</title>
+    <title>Кликер с энергией</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            height: 100vh; /* Высота окна браузера */
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            background-color: #f0f0f0; /* Цвет фона для контраста */
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
-        .score {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        .click-btn {
-            width: 312.5px; /* Увеличиваем ширину на 25% (250px * 1.25) */
-            height: 312.5px; /* Увеличиваем высоту на 25% (250px * 1.25) */
-            font-size: 2em; /* Увеличиваем размер шрифта */
-            background-color: #4CAF50; /* Начальный цвет кнопки */
-            color: white;
-            border: none;
+        #clickButton {
+            padding: 20px;
+            font-size: 24px;
             cursor: pointer;
-            border-radius: 50%; /* Делаем элемент круглым */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Добавляем тень */
-            text-align: center; /* Центрируем текст */
-            transition: background-color 0.3s, transform 0.2s; /* Плавный переход цвета и уменьшения */
         }
-        .click-btn:hover {
-            background-color: #45a049;
+        #energyBar {
+            width: 200px;
+            height: 30px;
+            background-color: #ddd;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #energy {
+            height: 100%;
+            background-color: #76c7c0;
+            width: 100%;
+            transition: width 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <div class="score" id="score">Счёт: 0</div>
-    <div class="click-btn" id="click-btn">Кликни</div>
+    <h1>Кликер с энергией</h1>
+    <button id="clickButton">Клик!</button>
+    <div id="energyBar">
+        <div id="energy"></div>
+    </div>
+    <p id="score">Очки: 0</p>
 
     <script>
-        // Инициализируем счет из LocalStorage
-        let score = localStorage.getItem('clickScore');
+        let score = 0;
+        let energy = 100; // Начальное значение энергии
+        const energyRechargeRate = 1; // Скорость восстановления энергии
+        const maxEnergy = 100; // Максимальная энергия
+        const costPerClick = 20; // Энергия, необходимая для одного клика
 
-        // Проверяем, есть ли сохранённое значение
-        if (score !== null) {
-            score = parseInt(score);
-        } else {
-            score = 0; // Если значения нет, устанавливаем 0
-        }
+        const clickButton = document.getElementById('clickButton');
+        const scoreDisplay = document.getElementById('score');
+        const energyDisplay = document.getElementById('energy');
 
-        // Обновляем текст счётчика
-        function updateScoreDisplay() {
-            document.getElementById("score").innerText = "Счёт: " + score;
-        }
-
-        // Храним активные идентификаторы касаний
-        let activeTouches = new Set();
-
-        // Функция для обработки касаний (multi-touch)
-        function handleTouch(event) {
-            event.preventDefault(); // Предотвращаем стандартное действие
-
-            // Проходим по новым касаниям
-            for (let i = 0; i < event.changedTouches.length; i++) {
-                let touch = event.changedTouches[i];
-
-                // Проверяем, если это новое касание (его еще нет в активных)
-                if (!activeTouches.has(touch.identifier)) {
-                    activeTouches.add(touch.identifier); // Добавляем в активные касания
-                    score++; // Увеличиваем счет на 1
-                    changeButtonColor(); // Меняем цвет кнопки
-                }
+        clickButton.addEventListener('click', () => {
+            if (energy >= costPerClick) {
+                score++;
+                energy -= costPerClick;
+                scoreDisplay.textContent = `Очки: ${score}`;
+                updateEnergyBar();
+            } else {
+                alert("Недостаточно энергии!");
             }
-
-            // Сохраняем значение в LocalStorage
-            localStorage.setItem('clickScore', score);
-            updateScoreDisplay(); // Обновляем текст счётчика
-        }
-
-        // Функция для обработки завершения касания (удаление из активных)
-        function handleTouchEnd(event) {
-            for (let i = 0; i < event.changedTouches.length; i++) {
-                let touch = event.changedTouches[i];
-
-                // Удаляем завершённое касание из активных
-                activeTouches.delete(touch.identifier);
-            }
-        }
-
-        // Функция для изменения цвета кнопки
-        function changeButtonColor() {
-            const brightGreen = '#66BB6A'; // Более яркий зеленый цвет
-            const button = document.getElementById("click-btn");
-            button.style.backgroundColor = brightGreen; // Меняем на яркий зеленый
-
-            // Уменьшаем кнопку
-            button.style.transform = 'scale(0.95)'; // Уменьшаем до 95%
-
-            // Возвращаем исходные значения через 300 мс
-            setTimeout(() => {
-                button.style.backgroundColor = '#4CAF50'; // Возвращаем исходный цвет
-                button.style.transform = 'scale(1)'; // Возвращаем размер
-            }, 300);
-        }
-
-        // Добавляем обработчики событий touchstart и touchend
-        document.getElementById("click-btn").addEventListener("touchstart", handleTouch);
-        document.getElementById("click-btn").addEventListener("touchend", handleTouchEnd);
-
-        // Обработчик события click для настольных устройств
-        document.getElementById("click-btn").addEventListener("click", function(event) {
-            score++; // Увеличиваем счет на 1 при клике
-            changeButtonColor(); // Меняем цвет кнопки
-            localStorage.setItem('clickScore', score); // Сохраняем значение в LocalStorage
-            updateScoreDisplay(); // Обновляем текст счётчика
         });
 
-        // Изначальное обновление текста счётчика
-        updateScoreDisplay();
+        function updateEnergyBar() {
+            const energyPercentage = (energy / maxEnergy) * 100;
+            energyDisplay.style.width = `${energyPercentage}%`;
+        }
+
+        function rechargeEnergy() {
+            if (energy < maxEnergy) {
+                energy += energyRechargeRate;
+                if (energy > maxEnergy) energy = maxEnergy; // Ограничиваем максимум энергии
+                updateEnergyBar();
+            }
+        }
+
+        // Восстанавливаем энергию каждые 1000 мс
+        setInterval(rechargeEnergy, 1000);
+
+        // Инициализируем начальное состояние
+        updateEnergyBar();
     </script>
 
 </body>
